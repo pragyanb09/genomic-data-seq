@@ -53,6 +53,28 @@ def split_dna_into_codons(reading_frame, sequence) :
 
     return codon_array;
 
+def get_sequences():
+    with open("dna.example.fasta") as f:
+        count = 0;
+        sequence = ""
+        sequences = []
+
+        for line in f :
+            if line[0] == '>' and count != 0 :
+                sequence = sequence.replace("\n", "")
+                sequences.append(sequence)
+                sequence = ""
+            
+            elif count == 0 :
+                count += 1
+            
+            else:
+                sequence += line
+
+        sequence = sequence.replace("\n", "")
+        sequences.append(sequence)
+        return sequences
+
 def get_specific_sequence(record_number) :
     """get the specific sequence given a record number 1 - 18"""
     f = open("dna.example.fasta")
@@ -113,6 +135,7 @@ def find_all_repeats(len_repeat) :
     third for loop goes thru all the other sequences and checks ea individual substring if it is equal
     then compare and whatever
     """
+    all_sequences = get_sequences()
     sequence = ""
     most_freq = 0
     most_freq_seq = ""
@@ -122,13 +145,16 @@ def find_all_repeats(len_repeat) :
     temp_substring = ""
 
     for i in range (0, 18) : # loops thru every single sequence to find all the substrings
-        sequence = get_specific_sequence(i + 1) # the sequence where the substrings are coming from currently
+        sequence = all_sequences[i] # the sequence where the substrings are coming from currently
+        # print (i)
         
         for j in range (0, len(sequence) - len_repeat + 1) : # looping thru all the possible substrings
             substring = sequence[j:j+len_repeat] # a substring
+            #print(substring)
             
             for k in range(0, 18) : # looping thru every single sequence now to get the count
-                temp_sequence = get_specific_sequence(k+1) # sequence where i am getting substrings to compare to the og substring
+                temp_sequence = all_sequences[k] # gets the sequence for comparison
+                # print(temp_sequence)
                 
                 for m in range (0, len(temp_sequence) - len_repeat + 1) : # looping thru all those substrings in my temp_sequence
                     temp_substring = temp_sequence[m:m+len_repeat] # getting my temp_substring value

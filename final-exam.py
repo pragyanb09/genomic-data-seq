@@ -107,19 +107,44 @@ def get_orfs(codon_array) :
 
 def find_all_repeats(len_repeat) :
     """
-    3 for loops
+    4 for loops
     grab first sequence in first for loop
     second for loop grabs the first substring of length len_repeat
-    third for loop goes thru all the other sequences and checks the count
+    third for loop goes thru all the other sequences and checks ea individual substring if it is equal
     then compare and whatever
     """
     sequence = ""
     most_freq = 0
-    count = 0
     most_freq_seq = ""
+    count = 0
+    substring = ""
+    temp_sequence = ""
+    temp_substring = ""
 
-    for i in range (0, 18) :
+    for i in range (0, 18) : # loops thru every single sequence to find all the substrings
+        sequence = get_specific_sequence(i + 1) # the sequence where the substrings are coming from currently
+        
+        for j in range (0, len(sequence) - len_repeat + 1) : # looping thru all the possible substrings
+            substring = sequence[j:j+len_repeat] # a substring
+            
+            for k in range(0, 18) : # looping thru every single sequence now to get the count
+                temp_sequence = get_specific_sequence(k+1) # sequence where i am getting substrings to compare to the og substring
+                
+                for m in range (0, len(temp_sequence) - len_repeat + 1) : # looping thru all those substrings in my temp_sequence
+                    temp_substring = temp_sequence[m:m+len_repeat] # getting my temp_substring value
+                    
+                    if substring == temp_substring : # if the substrings are equal, increase the count
+                        count += 1
 
+            if count > most_freq : # i have now looped thru all the sequences and all their substrings and checked
+                most_freq = count
+                most_freq_seq = substring # changed my most_freq variables successfully
+            
+            count = 0 # must reset each time no matter what
+
+    print("The most frequent substring of length ", len_repeat, " is ", most_freq_seq, " with a count of ", most_freq)
+
+                
 
 
 #running the programs
@@ -130,44 +155,12 @@ shortest_len()
 reading_frame = 3
 #seq = "ATGGCCGCCGCCATATAAATGAAATAA"
 sequence = [] #split_dna_into_codons(reading_frame, seq)
-print()
+
+"""print()
 for i in range (0, num_records()) :
     sequence = split_dna_into_codons(reading_frame, get_specific_sequence(i + 1))
     print("Sequence Number ", i+1)
     get_orfs(sequence)
-    print()
+    print()"""
 
-
-
-
-
-#print(len(codon_array))
-
-"""making code for the find_orfs method
-s = "ATGATATATGGCGCTAAAAAATGATCGGATTAAATGATATAA"
-n = 3 #splitting count
-
-temp = []; out = []
-
-for i in range (a - 1, len(s), n) :
-    temp.append(s[i:i+n])
-
-print(out)
-
-#print(out[0].find('ATG'))
-lens = []
-fin = 1000000000000
-idxs = []
-
-while out[0].find('ATG') is not -1 :
-    b = out[0].find('ATG')
-    idxs.append(out[0][b+3:].find('TAA')); idxs.append(out[0][b+3:].find('TAG')); idxs.append(out[0][b+3:].find('TGA'))
-    for i in range (0, len(idxs)) :
-        if idxs[i] is not -1 and idxs[i] < fin:
-            fin = idxs[i]
-    idxs.clear()
-    lens.append(out[0][b:fin+3])
-    out[0] = out[0][fin+4:]
-    fin = 1000000000000
-
-print(lens)"""
+find_all_repeats(6)

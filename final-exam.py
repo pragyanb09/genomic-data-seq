@@ -6,7 +6,7 @@ def num_records() :
         if line[0] == '>':
             count += 1
 
-    print("number of sequences: ", count)
+    return count
 
 def sequence_lens() :
     """finds lengths of all sequences"""
@@ -41,7 +41,6 @@ def shortest_len() :
     seq = sequence_lens()
     seq.pop(0)
     print("shortest: ", min(seq))
-
 
 def split_dna_into_codons(reading_frame, sequence) :
     """
@@ -92,27 +91,53 @@ def get_orfs(codon_array) :
             for j in range (i + 1, len(codon_array)) : # start trying to find the first end codon
                 if codon_array[j] in ["TAA", "TAG", "TGA"]:
                     temp = (j - i + 1) * 3
+
+                    if temp > longest_orf :
+                        long_idx = i
+                        longest_orf = temp
+                    
+                    if temp < shortest_orf :
+                        short_idx = i
+                        shortest_orf = temp
+
                     break
-        
-            if temp > longest_orf :
-                long_idx = i
-                longest_orf = temp
-            
-            if temp < shortest_orf :
-                short_idx = i
-                shortest_orf = temp
     
     print("longest orf is ", longest_orf, " starting at index ", long_idx)
     print("shortest orf is ", shortest_orf, "starting at index ", short_idx)
 
+def find_all_repeats(len_repeat) :
+    """
+    3 for loops
+    grab first sequence in first for loop
+    second for loop grabs the first substring of length len_repeat
+    third for loop goes thru all the other sequences and checks the count
+    then compare and whatever
+    """
+    sequence = ""
+    most_freq = 0
+    count = 0
+    most_freq_seq = ""
+
+    for i in range (0, 18) :
+
+
 
 #running the programs
-num_records()
+print(num_records())
 sequence_lens()
 longest_len()
 shortest_len()
-reading_frame = 2
-sequence = ""
+reading_frame = 3
+#seq = "ATGGCCGCCGCCATATAAATGAAATAA"
+sequence = [] #split_dna_into_codons(reading_frame, seq)
+print()
+for i in range (0, num_records()) :
+    sequence = split_dna_into_codons(reading_frame, get_specific_sequence(i + 1))
+    print("Sequence Number ", i+1)
+    get_orfs(sequence)
+    print()
+
+
 
 
 
